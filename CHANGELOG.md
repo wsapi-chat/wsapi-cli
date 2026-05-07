@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-05-07
+
+### Changed
+
+- Bump `commander` 12 → 14.
+- Bump `typescript` 5.9 → 6.0 (added explicit `"types": ["node"]` to `tsconfig.json` since TS 6 no longer auto-discovers `@types/node`).
+- Bump `@eslint/js` 9.39 → 10.0 to align with `eslint` 10.
+- Bump `softprops/action-gh-release` v2 → v3 in the release workflow.
+- CI: added `npm run type-check` to the Lint & Format job so future TS regressions don't slip through.
+
 ## [0.1.0] - 2026-05-07
 
 ### Added
