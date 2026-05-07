@@ -1,0 +1,62 @@
+{
+  "name": "@wsapichat/cli",
+  "version": "0.1.0",
+  "description": "Command-line client for the WSAPI WhatsApp API. Send messages, manage groups, chats, and contacts, and inspect your WSAPI instance from the terminal. This is an independent API and is not affiliated with META or WhatsApp.",
+  "author": "WSAPI <info@wsapi.chat>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wsapi-chat/wsapi-cli"
+  },
+  "homepage": "https://wsapi.chat",
+  "keywords": [
+    "whatsapp",
+    "api",
+    "cli",
+    "command-line",
+    "wsapi"
+  ],
+  "type": "module",
+  "bin": {
+    "wsapi": "dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup && chmod +x dist/index.js",
+    "dev": "tsup --watch",
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src/ tests/",
+    "lint:fix": "eslint src/ tests/ --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "dependencies": {
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.3",
+    "@types/node": "^25.3.3",
+    "eslint": "^10.0.2",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.1",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1",
+    "vitest": "^4.0.18"
+  }
+}
