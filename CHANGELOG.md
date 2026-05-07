@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-05-07
+
+### Fixed
+
+- `wsapi --version` now reflects the installed package version. Previously it was hardcoded to `0.1.0` in `src/index.ts` and never updated by the release workflow's `npm version` step.
+
+### Changed
+
+- Build: `tsup` injects `__WSAPI_CLI_VERSION__` from `package.json` at build time so the bundled binary stays in sync with the npm version automatically.
+
+### Added
+
+- `tests/version.test.ts` regression test that runs `dist/index.js --version` and asserts it matches `package.json#version`.
+
 ## [0.1.1] - 2026-05-07
 
 ### Changed

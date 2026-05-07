@@ -13,12 +13,14 @@ import { registerNewslettersCommands } from './commands/newsletters.js';
 import { registerStatusCommands } from './commands/status.js';
 import { handleError } from './runner.js';
 
+declare const __WSAPI_CLI_VERSION__: string;
+
 const program = new Command();
 
 program
   .name('wsapi')
   .description('Command-line client for the WSAPI WhatsApp cloud API')
-  .version('0.1.0')
+  .version(__WSAPI_CLI_VERSION__)
   .option('--profile <name>', 'named profile from the config file')
   .option('--api-key <key>', 'WSAPI API key (overrides env and config)')
   .option('--instance-id <id>', 'WSAPI instance ID (overrides env and config)')

@@ -1,6 +1,6 @@
 {
   "name": "@wsapichat/cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Command-line client for the WSAPI WhatsApp API. Send messages, manage groups, chats, and contacts, and inspect your WSAPI instance from the terminal. This is an independent API and is not affiliated with META or WhatsApp.",
   "author": "WSAPI <info@wsapi.chat>",
   "license": "MIT",
