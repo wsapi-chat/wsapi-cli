@@ -36,12 +36,13 @@ export function registerGroupsCommands(program: Command): void {
   g.command('set-name <id>')
     .description('Set group name')
     .requiredOption('--name <name>', 'new group name')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
         await c.request(`/groups/${encodeURIComponent(id)}/name`, {
           method: 'PUT',
-          body: { name: cmd.opts().name },
+          body: buildBody({ name: cmd.opts().name }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -50,12 +51,13 @@ export function registerGroupsCommands(program: Command): void {
   g.command('set-description <id>')
     .description('Set group description')
     .option('--description <text>', 'description (omit for empty)')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
         await c.request(`/groups/${encodeURIComponent(id)}/description`, {
           method: 'PUT',
-          body: { description: cmd.opts().description ?? '' },
+          body: buildBody({ description: cmd.opts().description ?? '' }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -65,6 +67,7 @@ export function registerGroupsCommands(program: Command): void {
     .description('Set group picture (JPEG)')
     .option('--data-file <path>', 'JPEG file to upload (base64 encoded)')
     .option('--data-base64 <base64>', 'base64-encoded JPEG image')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
@@ -72,7 +75,7 @@ export function registerGroupsCommands(program: Command): void {
         const data = o.dataFile ? await readFileToBase64(o.dataFile) : o.dataBase64;
         return c.request(`/groups/${encodeURIComponent(id)}/picture`, {
           method: 'POST',
-          body: { data },
+          body: buildBody({ data }, cmd.opts().data),
         });
       }),
     );
@@ -100,13 +103,14 @@ export function registerGroupsCommands(program: Command): void {
     .description('Add, remove, promote, or demote participants')
     .requiredOption('--action <action>', 'add | remove | promote | demote')
     .requiredOption('--participants <jids>', 'comma-separated JIDs', commaList)
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
         const o = cmd.opts();
         await c.request(`/groups/${encodeURIComponent(id)}/participants`, {
           method: 'PUT',
-          body: { participants: o.participants, action: o.action },
+          body: buildBody({ participants: o.participants, action: o.action }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -138,13 +142,14 @@ export function registerGroupsCommands(program: Command): void {
     g.command(`${setting.cmd} <id>`)
       .description(setting.help)
       .requiredOption('--enabled <bool>', 'true | false')
+      .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
       .action(
         action(async (c, cmd) => {
           const [id] = cmd.args;
           const enabled = cmd.opts().enabled === 'true' || cmd.opts().enabled === true;
           await c.request(`/groups/${encodeURIComponent(id)}/settings/${setting.path}`, {
             method: 'PUT',
-            body: { enabled },
+            body: buildBody({ enabled }, cmd.opts().data),
           });
           return { status: 'ok' };
         }),
@@ -154,6 +159,7 @@ export function registerGroupsCommands(program: Command): void {
   g.command('set-member-add-mode <id>')
     .description('Control whether only admins can add members')
     .requiredOption('--only-admin-add <bool>', 'true | false')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
@@ -161,7 +167,7 @@ export function registerGroupsCommands(program: Command): void {
         const onlyAdminAdd = v === 'true' || v === true;
         await c.request(`/groups/${encodeURIComponent(id)}/settings/member-add-mode`, {
           method: 'PUT',
-          body: { onlyAdminAdd },
+          body: buildBody({ onlyAdminAdd }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -170,11 +176,12 @@ export function registerGroupsCommands(program: Command): void {
   g.command('join-link')
     .description('Join a group via an invite link code')
     .requiredOption('--code <code>', 'invite link code (the part after https://chat.whatsapp.com/)')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action((c, cmd) => {
         return c.request('/groups/join/link', {
           method: 'POST',
-          body: { code: cmd.opts().code },
+          body: buildBody({ code: cmd.opts().code }, cmd.opts().data),
         });
       }),
     );
@@ -223,13 +230,14 @@ export function registerGroupsCommands(program: Command): void {
     .description('Approve or reject pending join requests')
     .requiredOption('--action <action>', 'approve | reject')
     .requiredOption('--participants <jids>', 'comma-separated JIDs', commaList)
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
         const o = cmd.opts();
         await c.request(`/groups/${encodeURIComponent(id)}/requests`, {
           method: 'PUT',
-          body: { participants: o.participants, action: o.action },
+          body: buildBody({ participants: o.participants, action: o.action }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),

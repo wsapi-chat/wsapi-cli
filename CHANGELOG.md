@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [3.0.0]
+
+Every body-bearing command now supports --data JSON/file merging. Corrected the Node runtime requirement to >=20, API scope documentation, and unpaired-device error to 409. Added command/HTTP contract tests. Updated compatible dependency fixes.
 
 ## [0.1.2] - 2026-05-07
 

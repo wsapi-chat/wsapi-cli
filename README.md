@@ -12,9 +12,9 @@ This is an independent API and is not affiliated with META or WhatsApp.
 
 ## Features
 
-- **Full REST coverage** — every endpoint across messages, groups, communities, contacts, users,
+- **WhatsApp REST coverage** — every endpoint across messages, groups, communities, contacts, users,
   chats, calls, newsletters, status, media, and session management.
-- **JSON in, JSON out** — every command emits JSON to stdout, ready to pipe into `jq`, `xargs`,
+- **JSON in, JSON out** — JSON commands emit JSON to stdout; binary endpoints emit bytes, ready to pipe into `jq`, `xargs`,
   scripts, or your shell of choice.
 - **Layered configuration** — flags, environment variables, and named profiles in
   `~/.wsapi/config.json`. Switch between staging and production with `--profile`.
@@ -30,7 +30,7 @@ This is an independent API and is not affiliated with META or WhatsApp.
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) 18 or later
+- [Node.js](https://nodejs.org/) 20 or later
 - A WSAPI instance ID and API key
 
 ### Installation
@@ -211,8 +211,8 @@ API errors are emitted to stderr as JSON:
 ```json
 {
   "error": "device not paired",
-  "status": 403,
-  "body": { "status": 403, "detail": "device not paired" }
+  "status": 409,
+  "body": { "status": 409, "detail": "device not paired" }
 }
 ```
 
@@ -231,3 +231,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 ## License
 
 [MIT](LICENSE)
+
+## API scope
+
+Covers all 101 WhatsApp operations. Cloud Account/subscription management and OSS `/admin/instances` endpoints are separate and are not CLI commands.

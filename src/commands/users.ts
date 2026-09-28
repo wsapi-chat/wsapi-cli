@@ -31,11 +31,12 @@ export function registerUsersCommands(program: Command): void {
   u.command('set-presence')
     .description('Set presence to available or unavailable')
     .requiredOption('--presence <state>', 'available | unavailable')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         await c.request('/users/me/presence', {
           method: 'PUT',
-          body: { presence: cmd.opts().presence },
+          body: buildBody({ presence: cmd.opts().presence }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -49,12 +50,13 @@ export function registerUsersCommands(program: Command): void {
     .description('Update a single privacy setting')
     .requiredOption('--setting <name>', 'groupadd | last | status | profile | readreceipts | online | calladd')
     .requiredOption('--value <value>', 'all | contacts | contact_blacklist | match_last_seen | known | none')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action((c, cmd) => {
         const o = cmd.opts();
         return c.request('/users/me/privacy', {
           method: 'PUT',
-          body: { setting: o.setting, value: o.value },
+          body: buildBody({ setting: o.setting, value: o.value }, cmd.opts().data),
         });
       }),
     );
@@ -71,11 +73,12 @@ export function registerUsersCommands(program: Command): void {
   u.command('check-bulk')
     .description('Bulk check phone numbers on WhatsApp')
     .requiredOption('--phones <list>', 'comma-separated phone numbers', commaList)
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action((c, cmd) => {
         return c.request('/users/check', {
           method: 'POST',
-          body: { phones: cmd.opts().phones },
+          body: buildBody({ phones: cmd.opts().phones }, cmd.opts().data),
         });
       }),
     );

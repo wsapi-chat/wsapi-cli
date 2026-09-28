@@ -12,11 +12,12 @@ export function registerStatusCommands(program: Command): void {
   s.command('text')
     .description('Post a text status')
     .requiredOption('--text <text>', 'status text')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action((c, cmd) => {
         return c.request('/status/text', {
           method: 'POST',
-          body: { text: cmd.opts().text },
+          body: buildBody({ text: cmd.opts().text }, cmd.opts().data),
         });
       }),
     );

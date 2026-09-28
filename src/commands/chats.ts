@@ -48,12 +48,13 @@ export function registerChatsCommands(program: Command): void {
   ch.command('set-presence <chatId>')
     .description('Send chat presence (typing, paused, recording)')
     .requiredOption('--state <state>', 'typing | paused | recording')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [chatId] = cmd.args;
         await c.request(`/chats/${encodeURIComponent(chatId)}/presence`, {
           method: 'PUT',
-          body: { state: cmd.opts().state },
+          body: buildBody({ state: cmd.opts().state }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -72,12 +73,13 @@ export function registerChatsCommands(program: Command): void {
   ch.command('set-ephemeral <chatId>')
     .description('Set disappearing-messages timer')
     .requiredOption('--expiration <off|24h|7d|90d>', 'timer value')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [chatId] = cmd.args;
         await c.request(`/chats/${encodeURIComponent(chatId)}/ephemeral`, {
           method: 'PUT',
-          body: { expiration: cmd.opts().expiration },
+          body: buildBody({ expiration: cmd.opts().expiration }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -86,12 +88,13 @@ export function registerChatsCommands(program: Command): void {
   ch.command('mute <chatId>')
     .description('Mute or unmute a chat')
     .requiredOption('--duration <8h|1w|always|off>', 'mute duration')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [chatId] = cmd.args;
         await c.request(`/chats/${encodeURIComponent(chatId)}/mute`, {
           method: 'PUT',
-          body: { duration: cmd.opts().duration },
+          body: buildBody({ duration: cmd.opts().duration }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -100,12 +103,13 @@ export function registerChatsCommands(program: Command): void {
   ch.command('pin <chatId>')
     .description('Pin or unpin a chat')
     .option('--unpin', 'unpin instead of pinning')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [chatId] = cmd.args;
         await c.request(`/chats/${encodeURIComponent(chatId)}/pin`, {
           method: 'PUT',
-          body: { pinned: !cmd.opts().unpin },
+          body: buildBody({ pinned: !cmd.opts().unpin }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -114,12 +118,13 @@ export function registerChatsCommands(program: Command): void {
   ch.command('archive <chatId>')
     .description('Archive or unarchive a chat')
     .option('--unarchive', 'unarchive instead of archiving')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [chatId] = cmd.args;
         await c.request(`/chats/${encodeURIComponent(chatId)}/archive`, {
           method: 'PUT',
-          body: { archived: !cmd.opts().unarchive },
+          body: buildBody({ archived: !cmd.opts().unarchive }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -128,12 +133,13 @@ export function registerChatsCommands(program: Command): void {
   ch.command('read <chatId>')
     .description('Mark a chat as read or unread')
     .option('--unread', 'mark unread instead of read')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [chatId] = cmd.args;
         await c.request(`/chats/${encodeURIComponent(chatId)}/read`, {
           method: 'PUT',
-          body: { read: !cmd.opts().unread },
+          body: buildBody({ read: !cmd.opts().unread }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),

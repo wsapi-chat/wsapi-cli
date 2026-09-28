@@ -54,12 +54,13 @@ export function registerCommunitiesCommands(program: Command): void {
   cm.command('set-name <id>')
     .description('Set community name')
     .requiredOption('--name <name>', 'new name')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
         await c.request(`/communities/${encodeURIComponent(id)}/name`, {
           method: 'PUT',
-          body: { name: cmd.opts().name },
+          body: buildBody({ name: cmd.opts().name }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -68,12 +69,13 @@ export function registerCommunitiesCommands(program: Command): void {
   cm.command('set-description <id>')
     .description('Set community description')
     .option('--description <text>', 'description')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
         await c.request(`/communities/${encodeURIComponent(id)}/description`, {
           method: 'PUT',
-          body: { description: cmd.opts().description ?? '' },
+          body: buildBody({ description: cmd.opts().description ?? '' }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -83,6 +85,7 @@ export function registerCommunitiesCommands(program: Command): void {
     .description('Set community picture (JPEG)')
     .option('--data-file <path>', 'JPEG file to upload')
     .option('--data-base64 <base64>', 'base64-encoded JPEG image')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
@@ -90,7 +93,7 @@ export function registerCommunitiesCommands(program: Command): void {
         const data = o.dataFile ? await readFileToBase64(o.dataFile) : o.dataBase64;
         return c.request(`/communities/${encodeURIComponent(id)}/picture`, {
           method: 'POST',
-          body: { data },
+          body: buildBody({ data }, cmd.opts().data),
         });
       }),
     );
@@ -98,13 +101,14 @@ export function registerCommunitiesCommands(program: Command): void {
   cm.command('set-locked <id>')
     .description('Set community locked mode')
     .requiredOption('--enabled <bool>', 'true | false')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
         const enabled = cmd.opts().enabled === 'true' || cmd.opts().enabled === true;
         await c.request(`/communities/${encodeURIComponent(id)}/settings/locked`, {
           method: 'PUT',
-          body: { enabled },
+          body: buildBody({ enabled }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -123,13 +127,14 @@ export function registerCommunitiesCommands(program: Command): void {
     .description('Add, remove, promote, or demote participants')
     .requiredOption('--action <action>', 'add | remove | promote | demote')
     .requiredOption('--participants <jids>', 'comma-separated JIDs', commaList)
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
         const o = cmd.opts();
         await c.request(`/communities/${encodeURIComponent(id)}/participants`, {
           method: 'PUT',
-          body: { participants: o.participants, action: o.action },
+          body: buildBody({ participants: o.participants, action: o.action }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -181,12 +186,13 @@ export function registerCommunitiesCommands(program: Command): void {
   cm.command('link-subgroup <id>')
     .description('Link an existing group to a community as a sub-group')
     .requiredOption('--group-id <jid>', 'group JID to link')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
         await c.request(`/communities/${encodeURIComponent(id)}/groups/link`, {
           method: 'POST',
-          body: { groupId: cmd.opts().groupId },
+          body: buildBody({ groupId: cmd.opts().groupId }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),

@@ -54,12 +54,13 @@ export function registerNewslettersCommands(program: Command): void {
 
   n.command('subscribe <id>')
     .description('Subscribe to a newsletter')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
         await c.request(`/newsletters/${encodeURIComponent(id)}/subscription`, {
           method: 'PUT',
-          body: { subscribed: true },
+          body: buildBody({ subscribed: true }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -67,12 +68,13 @@ export function registerNewslettersCommands(program: Command): void {
 
   n.command('unsubscribe <id>')
     .description('Unsubscribe from a newsletter')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
         await c.request(`/newsletters/${encodeURIComponent(id)}/subscription`, {
           method: 'PUT',
-          body: { subscribed: false },
+          body: buildBody({ subscribed: false }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -80,12 +82,13 @@ export function registerNewslettersCommands(program: Command): void {
 
   n.command('mute <id>')
     .description('Mute a newsletter')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
         await c.request(`/newsletters/${encodeURIComponent(id)}/mute`, {
           method: 'PUT',
-          body: { mute: true },
+          body: buildBody({ mute: true }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
@@ -93,12 +96,13 @@ export function registerNewslettersCommands(program: Command): void {
 
   n.command('unmute <id>')
     .description('Unmute a newsletter')
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action(async (c, cmd) => {
         const [id] = cmd.args;
         await c.request(`/newsletters/${encodeURIComponent(id)}/mute`, {
           method: 'PUT',
-          body: { mute: false },
+          body: buildBody({ mute: false }, cmd.opts().data),
         });
         return { status: 'ok' };
       }),
