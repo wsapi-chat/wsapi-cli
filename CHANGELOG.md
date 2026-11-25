@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- `wsapi session passkey` subcommands for accounts that require passkey (WebAuthn) verification to link a device: `status` (`GET /session/passkey`), `request` (`POST /session/passkey/request`), `submit [file]` (`POST /session/passkey`, reads the `PublicKeyCredential.toJSON()` assertion from a JSON file or stdin, supports `--data`), and `confirm` (`POST /session/passkey/confirm`, optional — the server now confirms automatically).
+
+### Changed
+
+- `wsapi groups create`: `--participants` is now optional; omit it to create a group with only the paired account.
+- README documents the passkey flow and that `session qr` / `session pair-code` return HTTP 409 while a passkey step is pending.
+
 ## [3.0.0]
 
 Every body-bearing command now supports --data JSON/file merging. Corrected the Node runtime requirement to >=20, API scope documentation, and unpaired-device error to 409. Added command/HTTP contract tests. Updated compatible dependency fixes.

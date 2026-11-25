@@ -102,6 +102,30 @@ wsapi session pair-code 15551234567
 wsapi session status
 ```
 
+#### Passkey verification
+
+Some WhatsApp accounts require the owner's passkey (WebAuthn) to link a new device. When
+that happens, `session status` reports `passkeyStatus: "required"` and `session qr` /
+`session pair-code` fail with HTTP 409 — stop polling them and complete the passkey step:
+
+```bash
+# Inspect the passkey state (status, challenge, origin, ...)
+wsapi session passkey status
+
+# Ask WhatsApp for a challenge if none arrived on its own
+wsapi session passkey request
+
+# Run navigator.credentials.get() on https://web.whatsapp.com with the challenge, then submit
+# the PublicKeyCredential.toJSON() output from a file...
+wsapi session passkey submit assertion.json
+
+# ...or from stdin
+cat assertion.json | wsapi session passkey submit
+
+# Optional: the server sends the confirmation automatically; kept for compatibility
+wsapi session passkey confirm
+```
+
 ### 3. Send messages
 
 ```bash
@@ -142,6 +166,9 @@ wsapi groups list | jq -r '.[].name'
 # Get group info
 wsapi groups get 1234567890@g.us
 
+# Create a group (omit --participants to create it with only the paired account)
+wsapi groups create --name "Team" --participants 15551234567@s.whatsapp.net
+
 # Add a participant
 wsapi groups update-participants 1234567890@g.us \
   --action add \
@@ -162,7 +189,7 @@ Without `--output`, binary endpoints write to stdout. Pipe it into a file or ano
 
 | Group         | Examples                                                                                                                                                                                                                                                                                                 |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `session`     | `status`, `qr`, `qr --text`, `pair-code <phone>`, `logout`, `flush-history`                                                                                                                                                                                                                              |
+| `session`     | `status`, `qr`, `qr --text`, `pair-code <phone>`, `passkey status`, `passkey request`, `passkey submit [file]`, `passkey confirm`, `logout`, `flush-history`                                                                                                                                             |
 | `messages`    | `text`, `image`, `video`, `audio`, `voice`, `document`, `sticker`, `contact`, `location`, `link`, `react`, `edit`, `read`, `star`, `pin`, `delete`, `delete-for-me`                                                                                                                                      |
 | `groups`      | `list`, `get`, `create`, `set-name`, `set-description`, `set-picture`, `leave`, `participants`, `update-participants`, `invite-link`, `reset-invite`, `set-announce`, `set-locked`, `set-join-approval`, `set-member-add-mode`, `join-link`, `join-invite`, `invite-info`, `requests`, `update-requests` |
 | `communities` | `list`, `get`, `create`, `leave`, `set-name`, `set-description`, `set-picture`, `set-locked`, `participants`, `update-participants`, `invite-link`, `reset-invite`, `subgroups`, `create-subgroup`, `link-subgroup`, `unlink-subgroup`                                                                   |

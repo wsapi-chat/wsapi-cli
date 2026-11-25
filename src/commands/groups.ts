@@ -21,8 +21,12 @@ export function registerGroupsCommands(program: Command): void {
   g.command('create')
     .description('Create a new group')
     .requiredOption('--name <name>', 'group name')
-    .requiredOption('--participants <jids>', 'comma-separated participant JIDs', commaList)
-    .option('--data <json>', 'extra body fields as JSON')
+    .option(
+      '--participants <jids>',
+      'comma-separated participant JIDs (omit to create a group with only you)',
+      commaList,
+    )
+    .option('--data <json>', 'extra body fields as JSON; prefix with @ to load from file')
     .action(
       action((c, cmd) => {
         const o = cmd.opts();
